@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "copycat-tgbot"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Dudnik <shurik@shurik.info>"]
+readme = "README.md"
+packages = [{include = "copycat_tgbot"}]
+
+[tool.poetry.scripts]
+run_bot = 'copycat_tgbot.run:_'
+
+[tool.poetry.dependencies]
+python = "^3.12"
+asyncio = "^3.4.3"
+aiogram = "^3.18.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+pytest = "^8.3.4"
+autoflake = "^2.3.1"
+python-dotenv = "^1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
