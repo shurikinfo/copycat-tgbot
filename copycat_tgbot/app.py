@@ -1,21 +1,20 @@
 import logging
 from os import getenv
-from dotenv import load_dotenv, find_dotenv
 
 from aiogram import Bot, Dispatcher
+from dotenv import find_dotenv, load_dotenv
 
 from copycat_tgbot.base import Config
 from copycat_tgbot.logger import init_logger
-from copycat_tgbot.routes.start import start_router
 from copycat_tgbot.routes.help import help_router
+from copycat_tgbot.routes.start import start_router
 
 logger = logging.getLogger(__name__)
 
+
 class TgBot:
-    def __init__(
-            self
-    ):
-        self.version = '1.0.1'
+    def __init__(self):
+        self.version = "1.0.1"
         self.logger = None
         self.dp = None
         self.bot = None
@@ -47,13 +46,10 @@ class TgBot:
             exit(1)
 
         logger.debug(f"Инициализируем бота")
-        self.bot = Bot(token=getenv('BOT_TOKEN'))
+        self.bot = Bot(token=getenv("BOT_TOKEN"))
 
         logger.debug(f"Инициализируем команды")
-        self.dp.include_routers(
-            start_router,
-            help_router
-        )
+        self.dp.include_routers(start_router, help_router)
 
     async def run(self):
         logger.debug(f"Запускаем бота")

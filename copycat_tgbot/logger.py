@@ -1,6 +1,7 @@
 import logging
 
-from copycat_tgbot.constants import LOGGER_FORMAT, LOGGER_STREAM, LOGGER_LEVEL
+from copycat_tgbot.constants import LOGGER_FORMAT, LOGGER_LEVEL, LOGGER_STREAM
+
 
 def init_logger(level: str = LOGGER_LEVEL):
     # Определяем логгер

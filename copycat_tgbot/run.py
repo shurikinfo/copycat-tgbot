@@ -1,4 +1,5 @@
 import asyncio
+
 from copycat_tgbot.app import TgBot
 
 """Тут запускаем бота"""

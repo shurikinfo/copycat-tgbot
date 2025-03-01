@@ -6,7 +6,7 @@ LOGGER_FORMAT = "%(asctime)s | %(name)s | %(levelname)-8s | %(message)s"
 LOGGER_LEVEL = logging.INFO
 LOGGER_STREAM = sys.stdout
 
-DEFAULT_TIMEZONE = 'Europe/Moscow'
+DEFAULT_TIMEZONE = "Europe/Moscow"
 
 AVAILABLE_ROUTES = [
     {
@@ -15,4 +15,6 @@ AVAILABLE_ROUTES = [
     }
 ]
 
-PROMT_AVAILABLE_ROUTES = "".join(f"{route['name']} - {route['description']}\n" for route in AVAILABLE_ROUTES)
+PROMT_AVAILABLE_ROUTES = "".join(
+    f"{route['name']} - {route['description']}\n" for route in AVAILABLE_ROUTES
+)
