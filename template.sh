@@ -14,12 +14,12 @@ fi
 
 # Функция для преобразования строки в kebab-case
 to_kebab_case() {
-    echo "$1" | sed -r 's/([A-Z])/-\1/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//'
+    echo "$1" | sed 's/_/-/g'
 }
 
 # Функция для преобразования строки в snake_case
 to_snake_case() {
-    echo "$1" | sed -r 's/([A-Z])/_\1/g' | tr '[:upper:]' '[:lower:]' | sed 's/^_//'
+    echo "$1" | sed 's/-/_/g'
 }
 
 # Новое название (переданное пользователем)
@@ -64,3 +64,6 @@ replace_name "."
 
 echo "Замена завершена!"
 echo "Все вхождения '$OLD_NAME_KEBAB' (kebab-case) и '$OLD_NAME_SNAKE' (snake_case) заменены на '$NEW_NAME_KEBAB' и '$NEW_NAME_SNAKE' соответственно."
+
+# Удаление самого скрипта
+rm -f template.sh
