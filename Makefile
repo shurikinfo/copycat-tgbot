@@ -17,5 +17,5 @@ test:
 
 cover:
 	pytest --cov=copycat_tgbot \
-		--cov-report xml --cov-report term --cov-report html \
+	--cov-report xml --cov-report term --cov-report html \
 		-o junit_family=xunit2 --junitxml=test_report.xml
