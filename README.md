@@ -2,7 +2,7 @@
 
 ## Минимальные требования:
 * python (^3.12)
-* poetry (version 1.7.1)
+* poetry (^1.7.1)
 * asyncio (^3.4.3)
 * aiogram (^3.18.0)
 
