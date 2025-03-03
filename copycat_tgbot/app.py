@@ -1,26 +1,26 @@
 import logging
 from os import getenv
 
-from aiogram import Bot, Dispatcher
 from dotenv import find_dotenv, load_dotenv
 
 from copycat_tgbot.base import Config
+from copycat_tgbot.bot.app import TgBot
 from copycat_tgbot.logger import init_logger
-from copycat_tgbot.routes.help import help_router
-from copycat_tgbot.routes.start import start_router
+from copycat_tgbot.server.app import Server
 
 logger = logging.getLogger(__name__)
 
 
-class TgBot:
+class App:
     def __init__(self):
-        self.version = "1.0.1"
         self.logger = None
-        self.dp = None
         self.bot = None
-        self.config = Config()
+        self.config = None
+        self.server = None
 
     def init_app(self):
+        self.config = Config()
+
         config = getenv("CONFIG") or "dev"
         logger.debug(f"Выбран конфиг {config}")
 
@@ -33,9 +33,6 @@ class TgBot:
         else:
             self.logger = init_logger()
 
-        logger.debug(f"Инициализируем root-роутер")
-        self.dp = Dispatcher()
-
         logger.debug(f"Загружаем .env файл")
         try:
             env_file = find_dotenv(raise_error_if_not_found=True)
@@ -46,11 +43,10 @@ class TgBot:
             exit(1)
 
         logger.debug(f"Инициализируем бота")
-        self.bot = Bot(token=getenv("BOT_TOKEN"))
+        self.bot = TgBot()
+        self.bot.init_app()
 
-        logger.debug(f"Инициализируем команды")
-        self.dp.include_routers(start_router, help_router)
-
-    async def run(self):
-        logger.debug(f"Запускаем бота")
-        await self.dp.start_polling(self.bot)
+    def init_server(self):
+        logger.debug(f"Инициализируем сервер")
+        self.server = Server()
+        self.server.init_app(self.bot)

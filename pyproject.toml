@@ -13,6 +13,8 @@ run_bot = 'copycat_tgbot.run:_'
 python = "^3.12"
 asyncio = "^3.4.3"
 aiogram = "^3.18.0"
+fastapi = "^0.115.11"
+uvicorn = "^0.34.0"
 
 
 [tool.poetry.group.dev.dependencies]

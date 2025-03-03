@@ -1,8 +1,8 @@
 import asyncio
 
-from copycat_tgbot.app import TgBot
+from copycat_tgbot.app import App
 
 """Тут запускаем бота"""
-app = TgBot()
+app = App()
 app.init_app()
-asyncio.run(app.run())
+asyncio.run(app.bot.run())
