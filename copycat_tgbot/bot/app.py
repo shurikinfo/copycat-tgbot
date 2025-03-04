@@ -38,7 +38,7 @@ class TgBot:
         webhook_info = await self.bot.get_webhook_info()
         if webhook_info.url != webhook_url:
             await self.bot.set_webhook(url=webhook_url)
-        logger.info(f"Бот запущен и вебхук установлен!: {webhook_info.url}")
+        logger.debug(f"Бот запущен и вебхук установлен!: {webhook_info.url}")
 
     # Удаление вебхука при остановке
     async def on_shutdown(self):

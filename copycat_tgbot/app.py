@@ -33,6 +33,12 @@ class App:
         else:
             self.logger = init_logger()
 
+        debug = self.config.get("DEBUG", False)
+        if not debug:
+            # Выключим access логи uvicorn.
+            logging.getLogger("uvicorn.access").handlers = []
+            logging.getLogger("uvicorn.access").propagate = False
+
         logger.debug(f"Загружаем .env файл")
         try:
             env_file = find_dotenv(raise_error_if_not_found=True)
