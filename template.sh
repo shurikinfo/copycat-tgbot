@@ -67,3 +67,6 @@ echo "Все вхождения '$OLD_NAME_KEBAB' (kebab-case) и '$OLD_NAME_SNA
 
 # Удаление самого скрипта
 rm -f template.sh
+
+# Удаление .git после генерации нового бота для создания нового репозитория
+rm -rf .git
