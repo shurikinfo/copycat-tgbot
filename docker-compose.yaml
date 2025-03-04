@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  copycat_tgbot:
+    image: copycat_tgbot:latest
+    container_name: copycat_tgbot-contaner
+    environment:
+      - CONFIG=prod
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
