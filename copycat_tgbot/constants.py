@@ -1,6 +1,7 @@
 # coding: utf-8
 import logging
 import sys
+from pathlib import Path
 
 LOGGER_FORMAT = "%(asctime)s | %(name)s | %(levelname)-8s | %(message)s"
 LOGGER_LEVEL = logging.INFO
@@ -45,4 +46,21 @@ UVICORN_LOG_CONFIG = {
             "propagate": False,
         },
     },
+}
+
+GOOGLE_CREDENTIALS_PATH = (
+    Path(__file__).parent.parent.absolute() / "google_credentials.json"
+)
+
+
+GOOGLE_SHEETS_STATISTICS_TITLE = "statistics"
+GOOGLE_SHEETS_BOOKS_TITLE = "books"
+
+GOOGLE_SHEETS_BOOKS_FIELDS = ["title", "author", "year", "created_at"]
+
+GOOGLE_SHEETS_LISTS = [GOOGLE_SHEETS_BOOKS_TITLE, GOOGLE_SHEETS_STATISTICS_TITLE]
+
+GOOGLE_SHEETS_FIELDS = {
+    GOOGLE_SHEETS_BOOKS_TITLE: GOOGLE_SHEETS_BOOKS_FIELDS,
+    GOOGLE_SHEETS_STATISTICS_TITLE: [],
 }

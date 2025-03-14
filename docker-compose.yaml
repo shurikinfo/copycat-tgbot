@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
   copycat_tgbot:
     image: copycat_tgbot:latest
     container_name: copycat_tgbot-contaner
@@ -8,8 +18,13 @@ services:
       - CONFIG=prod
     ports:
       - "8000:8000"
+    volumes:
+      - .:/copycat_tgbot
     networks:
       - app_network
+
+volumes:
+  redis_data:
 
 networks:
   app_network:

@@ -1,4 +1,4 @@
-.PHONY: run test lint cover dependencies
+.PHONY: run build test lint cover dependencies
 
 
 run:
@@ -7,13 +7,16 @@ run:
 dependencies:
 	poetry install
 
+build:
+	docker buildx build -t copycat_tgbot .
+
 lint:
 	black .
 	isort .
 	find . -type f -name '*.py' | xargs -I {} -n 1 autoflake --in-place --remove-all-unused-imports --ignore-init-module-imports {}
 
 test:
-	pytest --capture=no --log-cli-level=INFO
+	CONFIG=unittest pytest --capture=no --log-cli-level=INFO
 
 cover:
 	pytest --cov=copycat_tgbot \

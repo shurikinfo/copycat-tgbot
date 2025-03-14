@@ -26,14 +26,6 @@ RUN python -m venv /opt/venv && \
     pip install wheel && \
     poetry install
 
-# Образ для разработки
-FROM build-image AS dev-image
-
-RUN apt-get install -y vim make
-ENV PATH="/opt/venv/bin:$PATH"
-SHELL ["/bin/bash", "-c"]
-CMD ["/bin/bash"]
-
 # Образ для запуска на бою
 FROM deps-image
 
@@ -49,4 +41,4 @@ COPY  . .
 
 ENTRYPOINT ["uvicorn"]
 
-CMD ["copycat_tgbot.asgi:app.server.app", "--host", "0.0.0.0"]
+CMD ["copycat_tgbot.asgi:app.server.app", "--host", "0.0.0.0", "--log-level", "error"]

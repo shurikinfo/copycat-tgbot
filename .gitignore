@@ -7,4 +7,5 @@ __pycache__
 .python-version
 .idea
 .env
+*.json
 test_report.xml
