@@ -22,11 +22,10 @@ COPY pyproject.toml poetry.lock ./
 # Устанавливаем зависимости
 RUN python -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
-    # обязательно нужно установить wheel внутрь venv
     pip install wheel && \
     poetry install
 
-# Образ для запуска на бою
+# Lля запуска на бою
 FROM deps-image
 
 
