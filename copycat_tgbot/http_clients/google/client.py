@@ -5,7 +5,7 @@ from os import getenv
 from google.oauth2.service_account import Credentials
 
 from copycat_tgbot.constants import (GOOGLE_CREDENTIALS_PATH,
-                                     GOOGLE_SHEETS_LISTS)
+                                     GOOGLE_SHEETS_FIELDS)
 from copycat_tgbot.error import GoogleError
 from copycat_tgbot.http_clients.google.drive import (GoogleDriveService,
                                                      init_drive_service)
@@ -60,11 +60,12 @@ class GoogleClient:
         if not file:
             logger.debug("Не нашли документ, создаем новый")
             spreadsheet_id = self.sheets.create_sheets(
-                file_name=getenv("GOOGLE_FILE_NAME"), sheets_titles=GOOGLE_SHEETS_LISTS
+                file_name=getenv("GOOGLE_FILE_NAME"), sheets=GOOGLE_SHEETS_FIELDS
             )
             if spreadsheet_id:
                 self.sheets.create_statistics_sheet(
-                    spreadsheet_id=spreadsheet_id, sheets_titles=GOOGLE_SHEETS_LISTS
+                    spreadsheet_id=spreadsheet_id,
+                    sheets_titles=GOOGLE_SHEETS_FIELDS.keys(),
                 )
                 self.drive.add_permissions(
                     file_id=spreadsheet_id,
@@ -95,5 +96,9 @@ class GoogleClient:
 
         if not spreadsheet_id:
             raise GoogleError("Ошибка при получении файла Google Sheets")
-        #
-        # print(self.sheets.get_values_cached(spreadsheet_id=spreadsheet_id, sheet_title='statistics'))
+
+        self.sheets.spreadsheet_id = spreadsheet_id
+        logger.debug("Сохраняем таблицу в кэш")
+        self.sheets.get_values_cached(
+            spreadsheet_id=spreadsheet_id, sheet_title="books"
+        )

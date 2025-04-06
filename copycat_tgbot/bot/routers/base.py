@@ -1,9 +1,9 @@
 import logging
 
 from aiogram import Dispatcher
-from aiogram.types.message import Message
 
 from copycat_tgbot.base import Context
+from copycat_tgbot.http_clients.google.client import GoogleClient
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +15,11 @@ class BaseRouter:
 
     ROUTER_NAME = "base"
 
-    def __init__(self, dp: Dispatcher):
+    def __init__(self, dp: Dispatcher, gc: GoogleClient | None = None):
         self.dp = dp
         self.commands = []  # Список поддерживаемых команд
         self.context = Context
+        self.gc = gc  # Google Client
 
     def register_handlers(self):
         """Метод для регистрации обработчиков."""

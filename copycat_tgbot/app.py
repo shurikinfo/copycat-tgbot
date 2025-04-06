@@ -3,9 +3,10 @@ from os import getenv
 
 from dotenv import find_dotenv, load_dotenv
 
-from copycat_tgbot.base import Config, Context
+from copycat_tgbot.base import Config
 from copycat_tgbot.bot.app import TgBot
 from copycat_tgbot.cache import RedisCache
+from copycat_tgbot.error import GoogleError
 from copycat_tgbot.http_clients.google.client import GoogleClient
 from copycat_tgbot.logger import init_logger
 from copycat_tgbot.server.app import Server
@@ -54,10 +55,6 @@ class App:
             logger.error(f".env файл не найден")
             exit(1)
 
-        logger.debug(f"Инициализируем бота")
-        self.bot = TgBot()
-        self.bot.init_app()
-
         logger.debug(f"Инициализируем кэш")
         self.cache = RedisCache(
             redis_host=self.config["REDIS_CACHE_CONF"].get("host"),
@@ -71,9 +68,19 @@ class App:
         self.google.init_client(self.config, self.cache)
 
         logger.debug("Настраиваем GoogleClient")
-        self.google.setup_client()
+        try:
+            self.google.setup_client()
+        except GoogleError:
+            # Без гугл-клиента нам не особо полезно приложение
+            exit(1)
+
+        logger.debug(f"Инициализируем бота")
+        self.bot = TgBot(self.google)
+        self.bot.init_app()
+        logger.info("Бот инициализирован")
 
     def init_server(self) -> None:
         logger.debug(f"Инициализируем сервер")
         self.server = Server()
         self.server.init_app(self.bot, self.config)
+        logger.info("Сервер инициализирован")

@@ -1,3 +1,8 @@
 from copycat_tgbot.etc.config import *
 
-WEBHOOK_URL = "https://fa9d-141-98-235-136.ngrok-free.app/webhook"
+REDIS_CACHE_CONF = {
+    "host": "redis",
+    "port": 6379,
+    "db": 0,
+    "password": CACHE_REDIS_PASSWORD or None,
+}

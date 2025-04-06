@@ -19,15 +19,30 @@ class GoogleSheetsService:
 
     def __init__(self, credentials, cache: RedisCache):
         self.service = build("sheets", "v4", credentials=credentials)
+        self.spreadsheet_id = None
         self.cache = cache
 
-    def create_sheets(self, file_name: str, sheets_titles: list[str]):
+    def create_sheets(self, file_name: str, sheets: dict):
         """Создание нового документа Spreadsheet"""
         spreadsheet_details = {
             "properties": {"title": file_name},
             "sheets": [
-                {"properties": {"title": sheets_title}}
-                for sheets_title in sheets_titles
+                {
+                    "properties": {"title": title},
+                    "data": [
+                        {
+                            "rowData": [
+                                {
+                                    "values": [
+                                        {"userEnteredValue": {"stringValue": column}}
+                                        for column in columns
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                }
+                for title, columns in sheets.items()
             ],
         }
         try:
@@ -38,7 +53,6 @@ class GoogleSheetsService:
             )
             spreadsheet_id = spreadsheet.get("spreadsheetId")
         except googleError as e:
-            # logger.error("Ошибка при создании Spreadsheet-документа")
             logger.debug(e)
             raise GoogleError("Ошибка при создании Spreadsheet-документа")
 
@@ -47,16 +61,14 @@ class GoogleSheetsService:
         )
         return spreadsheet_id
 
-    def append_to_sheet(
-        self, spreadsheet_id: str, values: list | list[list], sheet_title: str
-    ):
+    def append_to_sheet(self, values: list | list[list], sheet_title: str):
         """Добавление информации в лист"""
         try:
             appended = (
                 self.service.spreadsheets()
                 .values()
                 .append(
-                    spreadsheetId=spreadsheet_id,
+                    spreadsheetId=self.spreadsheet_id,
                     range=f"{sheet_title}!A1:{generate_excel_range(len(values))}1",
                     valueInputOption="USER_ENTERED",
                     body={"values": values},
@@ -66,19 +78,20 @@ class GoogleSheetsService:
             logger.info(appended)
 
             self.cache.invalidate_cache(
-                "get_values", spreadsheet_id=spreadsheet_id, sheet_title=sheet_title
+                "get_values",
+                spreadsheet_id=self.spreadsheet_id,
+                sheet_title=sheet_title,
             )
 
             return appended
         except googleError as e:
             logger.debug(e)
             raise GoogleError(
-                f"Ошибка при добавлении информации в лист: {spreadsheet_id}:{sheet_title}"
+                f"Ошибка при добавлении информации в лист: {self.spreadsheet_id}:{sheet_title}"
             )
 
     def create_statistics_sheet(
         self,
-        spreadsheet_id: str,
         sheets_titles: list[str],
         sheet_title: str = GOOGLE_SHEETS_STATISTICS_TITLE,
     ) -> None:
@@ -90,7 +103,6 @@ class GoogleSheetsService:
         ]
 
         result = self.append_to_sheet(
-            spreadsheet_id=spreadsheet_id,
             values=[
                 counter_rows_titles,
                 counter_rows_function,
@@ -98,35 +110,26 @@ class GoogleSheetsService:
             sheet_title=sheet_title,
         )
         if result:
-            logger.info(f"Добавлена страница статистики {spreadsheet_id}:{sheet_title}")
+            logger.info(
+                f"Добавлена страница статистики {self.spreadsheet_id}:{sheet_title}"
+            )
 
     def get_values_cached(self, spreadsheet_id: str, sheet_title: str):
         @self.cache.cached()
-        def get_values(spreadsheet: str, sheet_title: str):
+        def get_values(sid: str, title: str):
             try:
                 return (
                     self.service.spreadsheets()
                     .values()
-                    .get(spreadsheetId=spreadsheet, range=sheet_title)
+                    .get(spreadsheetId=sid, range=title)
                     .execute()
                     .get("values")
                 )
             except googleError as e:
                 logger.debug(e)
-                raise GoogleError(
-                    f"Ошибка при получении данных из {spreadsheet}:{sheet_title}"
-                )
+                raise GoogleError(f"Ошибка при получении данных из {sid}:{title}")
 
-        return get_values(spreadsheet=spreadsheet_id, sheet_title=sheet_title)
-
-    # def get_values(self, spreadsheet_id: str, sheet_title: str):
-    #     try:
-    #         return self.service.spreadsheets().values().get(
-    #             spreadsheetId=spreadsheet_id,
-    #             range=sheet_title).execute().get('values')
-    #     except googleError as e:
-    #         logger.debug(e)
-    #         raise GoogleError(f"Ошибка при получении данных из {spreadsheet_id}:{sheet_title}")
+        return get_values(sid=spreadsheet_id, title=sheet_title)
 
 
 def init_sheets_service(credentials, cache):

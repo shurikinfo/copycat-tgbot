@@ -1,3 +1,4 @@
+import itertools
 import logging
 from os import getenv
 
@@ -7,7 +8,9 @@ from fastapi import Request
 
 from copycat_tgbot.base import Context
 from copycat_tgbot.bot.middleware import ContextMiddleware
+from copycat_tgbot.bot.routers.books import BooksRouter
 from copycat_tgbot.bot.routers.default import DefaultRouter
+from copycat_tgbot.http_clients.google.client import GoogleClient
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +20,12 @@ class TgBot:
     Сущность Телеграм бота
     """
 
-    def __init__(self):
+    def __init__(self, gc: GoogleClient):
         self.dp = None
         self.bot = None
         self.context = Context()
         self.commands = None
+        self.gc = gc
 
     def init_app(self):
         logger.debug(f"Инициализируем бота")
@@ -36,7 +40,12 @@ class TgBot:
         default_router = DefaultRouter(self.dp)
         default_router.register_handlers()
 
-        self.commands = default_router.get_commands()
+        books_router = BooksRouter(dp=self.dp, gc=self.gc)
+        books_router.register_handlers()
+
+        self.commands = tuple(
+            itertools.chain(default_router.get_commands(), books_router.get_commands())
+        )
 
     async def set_bot_commands(self):
         """Установка списка команд в боте"""

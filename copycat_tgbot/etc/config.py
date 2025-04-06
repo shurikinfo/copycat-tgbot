@@ -2,7 +2,7 @@ from os import getenv
 
 LOG_LEVEL = "INFO"
 DEBUG = False
-WEBHOOK_URL = "http://webhook_host/webhook"
+WEBHOOK_URL = getenv("WEBHOOK_URL")
 DRIVE_URL = "https://www.googleapis.com/auth/drive"
 SHEETS_URL = "https://www.googleapis.com/auth/spreadsheets"
 
