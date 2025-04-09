@@ -1,8 +1,10 @@
+name: ci_copycat-tgbot
 on:
   push:
     branches: [ "**" ]  # Запуск для всех веток
   pull_request:
     branches: [ "main" ]  # Для PR в main
+  workflow_dispatch:
 
 jobs:
   lint_and_test:
@@ -10,7 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.12
-      - uses: actions/setup-python@v3
+      
+        uses: actions/setup-python@v3
         with:
           python-version: "3.12"
       - name: Install dependencies
