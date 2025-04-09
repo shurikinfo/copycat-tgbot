@@ -31,6 +31,25 @@ python-dotenv = "^1.0.1"
 pytest-cov = "^6.0.0"
 pytest-asyncio = "^0.25.3"
 
+[tool.black]
+line-length = 88
+target-version = ['py311']
+force-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | .*\.json
+  | .*\.pyc
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

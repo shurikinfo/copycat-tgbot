@@ -4,13 +4,16 @@ from os import getenv
 
 from google.oauth2.service_account import Credentials
 
-from copycat_tgbot.constants import (GOOGLE_CREDENTIALS_PATH,
-                                     GOOGLE_SHEETS_FIELDS)
+from copycat_tgbot.constants import GOOGLE_CREDENTIALS_PATH, GOOGLE_SHEETS_FIELDS
 from copycat_tgbot.error import GoogleError
-from copycat_tgbot.http_clients.google.drive import (GoogleDriveService,
-                                                     init_drive_service)
+from copycat_tgbot.http_clients.google.drive import (
+    GoogleDriveService,
+    init_drive_service,
+)
 from copycat_tgbot.http_clients.google.spreadsheets import (
-    GoogleSheetsService, init_sheets_service)
+    GoogleSheetsService,
+    init_sheets_service,
+)
 
 logger = logging.getLogger(__name__)
 

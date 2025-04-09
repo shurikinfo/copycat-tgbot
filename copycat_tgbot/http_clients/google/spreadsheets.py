@@ -4,8 +4,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import Error as googleError
 
 from copycat_tgbot.cache import RedisCache
-from copycat_tgbot.constants import (GOOGLE_SHEETS_FIELDS,
-                                     GOOGLE_SHEETS_STATISTICS_TITLE)
+from copycat_tgbot.constants import GOOGLE_SHEETS_FIELDS, GOOGLE_SHEETS_STATISTICS_TITLE
 from copycat_tgbot.error import GoogleError
 from copycat_tgbot.utils import generate_excel_range
 

@@ -1,8 +1,12 @@
 from aiogram import Dispatcher
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import (KeyboardButton, Message, ReplyKeyboardMarkup,
-                           ReplyKeyboardRemove)
+from aiogram.types import (
+    KeyboardButton,
+    Message,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+)
 from dateutil.parser import parse
 
 from copycat_tgbot.bot.routers.base import BaseRouter
