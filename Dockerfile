@@ -25,7 +25,7 @@ RUN python -m venv /opt/venv && \
     pip install wheel && \
     poetry install
 
-# Lля запуска на бою
+# Для запуска на бою
 FROM deps-image
 
 
