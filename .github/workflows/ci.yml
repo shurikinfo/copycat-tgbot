@@ -24,6 +24,7 @@ jobs:
 
       - name: Linters
         run: |
+          poetry shell
           autoflake --check .
           isort --check .
           black --check .
