@@ -66,8 +66,8 @@ class GoogleClient:
                 file_name=getenv("GOOGLE_FILE_NAME"), sheets=GOOGLE_SHEETS_FIELDS
             )
             if spreadsheet_id:
+                self.sheets.spreadsheet_id = spreadsheet_id
                 self.sheets.create_statistics_sheet(
-                    spreadsheet_id=spreadsheet_id,
                     sheets_titles=GOOGLE_SHEETS_FIELDS.keys(),
                 )
                 self.drive.add_permissions(
@@ -94,14 +94,12 @@ class GoogleClient:
                 self.drive.add_permissions(
                     file_id=file["id"], permission_emails=emails_to_add_permissions
                 )
+            self.sheets.spreadsheet_id = file["id"]
 
-            spreadsheet_id = file["id"]
-
-        if not spreadsheet_id:
+        if not self.sheets.spreadsheet_id:
             raise GoogleError("Ошибка при получении файла Google Sheets")
 
-        self.sheets.spreadsheet_id = spreadsheet_id
         logger.debug("Сохраняем таблицу в кэш")
         self.sheets.get_values_cached(
-            spreadsheet_id=spreadsheet_id, sheet_title="books"
+            spreadsheet_id=self.sheets.spreadsheet_id, sheet_title="books"
         )
