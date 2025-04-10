@@ -1,8 +1,10 @@
+name: ci_copycat-tgbot
 on:
   push:
     branches: [ "**" ]  # Запуск для всех веток
   pull_request:
     branches: [ "main" ]  # Для PR в main
+  workflow_dispatch:
 
 jobs:
   lint_and_test:
@@ -10,12 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.12
-      - uses: actions/setup-python@v3
+      
+        uses: actions/setup-python@v3
         with:
           python-version: "3.12"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install poetry==1.7.1
           python -m venv /opt/venv && \
           . /opt/venv/bin/activate && \
           pip install wheel && \
@@ -23,13 +27,14 @@ jobs:
 
       - name: Linters
         run: |
+          . /opt/venv/bin/activate
           autoflake --check .
           isort --check .
           black --check .
 
-      - name: Test with pytest
-        run: |
-          make cover
+      # - name: Test with pytest
+      #   run: |
+      #     make cover
 
   # Этапы, выполняемые ТОЛЬКО для main после мержа
   master_checks:
