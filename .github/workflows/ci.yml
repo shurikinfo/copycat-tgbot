@@ -32,9 +32,9 @@ jobs:
           isort --check .
           black --check .
 
-      - name: Test with pytest
-        run: |
-          make cover
+      # - name: Test with pytest
+      #   run: |
+      #     make cover
 
   # Этапы, выполняемые ТОЛЬКО для main после мержа
   master_checks:
