@@ -75,4 +75,4 @@ jobs:
           git tag -a "${{ steps.tag.outputs.tag }}" -m "Release ${{ steps.tag.outputs.tag }}"
           git push origin "${{ steps.tag.outputs.tag }}"
         env:
-          PAT: ${{ secrets.GITHUB_ACTION_TOKEN }}
+          PAT: ${{ secrets.ACTION_TOKEN }}
