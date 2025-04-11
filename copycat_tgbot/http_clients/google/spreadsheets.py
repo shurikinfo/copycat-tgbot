@@ -4,9 +4,9 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import Error as googleError
 
 from copycat_tgbot.cache import RedisCache
-from copycat_tgbot.constants import GOOGLE_SHEETS_FIELDS, GOOGLE_SHEETS_STATISTICS_TITLE
+from copycat_tgbot.constants import GOOGLE_SHEETS_STATISTICS_TITLE
 from copycat_tgbot.error import GoogleError
-from copycat_tgbot.utils import generate_excel_range
+from copycat_tgbot.utils import generate_excel_range, sheet_to_dict
 
 logger = logging.getLogger(__name__)
 
@@ -115,20 +115,22 @@ class GoogleSheetsService:
 
     def get_values_cached(self, spreadsheet_id: str, sheet_title: str):
         @self.cache.cached()
-        def get_values(sid: str, title: str):
+        def get_values(spreadsheet_id: str, sheet_title: str):
             try:
-                return (
+                return sheet_to_dict(
                     self.service.spreadsheets()
                     .values()
-                    .get(spreadsheetId=sid, range=title)
+                    .get(spreadsheetId=spreadsheet_id, range=sheet_title)
                     .execute()
                     .get("values")
                 )
             except googleError as e:
                 logger.debug(e)
-                raise GoogleError(f"Ошибка при получении данных из {sid}:{title}")
+                raise GoogleError(
+                    f"Ошибка при получении данных из {spreadsheet_id}:{sheet_title}"
+                )
 
-        return get_values(sid=spreadsheet_id, title=sheet_title)
+        return get_values(spreadsheet_id=spreadsheet_id, sheet_title=sheet_title)
 
 
 def init_sheets_service(credentials, cache):

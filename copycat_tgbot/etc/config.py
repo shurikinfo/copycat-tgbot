@@ -1,5 +1,8 @@
 from os import getenv
 
+from dotenv import load_dotenv
+
+load_dotenv()
 LOG_LEVEL = "INFO"
 DEBUG = False
 WEBHOOK_URL = getenv("WEBHOOK_URL")
