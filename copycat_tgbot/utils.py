@@ -36,6 +36,7 @@ def env_to_dict(variables: set) -> dict:
             env_dict[var] = os.environ[var]
     return env_dict
 
+
 def sheet_to_dict(values: list[list], use_first_row_as_headers: bool = True) -> dict:
     """
     Преобразует данные Sheets в dict
